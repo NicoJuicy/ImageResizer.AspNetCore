@@ -30,6 +30,7 @@ namespace ImageResizer.AspNetCore.Helpers
                     return SKTextAlign.Center;
             }
         }
+        
         internal static SKFilterQuality GetSKFilterQuality(this short quality)
         {
             switch (quality)
@@ -46,6 +47,24 @@ namespace ImageResizer.AspNetCore.Helpers
                     return SKFilterQuality.Medium;
             }
         }
+
+        internal static SKSamplingOptions GetSKSamplingOptions(this short quality)
+        {
+            switch (quality)
+            {
+                case 1:
+                    return new SKSamplingOptions(SKFilterMode.Nearest);
+                case 2:
+                    return new SKSamplingOptions(SKFilterMode.Linear);
+                case 3:
+                    return new SKSamplingOptions(SKFilterMode.Linear);
+                case 4:
+                    return new SKSamplingOptions(SKFilterMode.Linear);
+                default:
+                    return new SKSamplingOptions(SKFilterMode.Linear);
+            }
+        }
+
         internal static SKPaintStyle GetSKPaintStyle(this short type)
         {
             switch (type)

@@ -187,7 +187,7 @@ namespace ImageResizer.AspNetCore
 
             // resize
             var resizedImageInfo = new SKImageInfo(resizeParams.w, resizeParams.h, SKImageInfo.PlatformColorType, bitmap.AlphaType);
-            var resizedBitmap = bitmap.Resize(resizedImageInfo, SKFilterQuality.High);
+            var resizedBitmap = bitmap.Resize(resizedImageInfo, new SKSamplingOptions(SKFilterMode.Linear));
 
             // optionally pad
             if (resizeParams.mode == "pad")
