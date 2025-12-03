@@ -348,3 +348,8 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/.github/architect.chatmode.md
+/.github/code.chatmode.md
+/.github/debug.chatmode.md
+/.github/ask.chatmode.md
+/memory-bank
