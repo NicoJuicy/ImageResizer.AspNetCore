@@ -8,13 +8,13 @@ namespace ImageResizer.AspNetCore.Models
     public class WatermarkTextModel
     {
         public short Key { get; set; }
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
         public short PositionMeasureType { get; set; }
         public float X { get; set; }
         public float Y { get; set; }
 
         public bool IsVerticalText { get; set; }
-        public string Color { get; set; }
+        public string Color { get; set; } = "#000000";
 
         public short Type { get; set; }
         public float StrokeWidth { get; set; }

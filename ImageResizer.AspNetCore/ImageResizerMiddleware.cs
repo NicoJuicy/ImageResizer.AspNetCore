@@ -24,8 +24,8 @@ namespace ImageResizer.AspNetCore
         private readonly ILogger<ImageResizerMiddleware> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly IMemoryCache _memoryCache;
-        private WatermarkTextModel watermarkText;
-        private WatermarkImageModel watermarkImage;
+        private WatermarkTextModel? watermarkText;
+        private WatermarkImageModel? watermarkImage;
 
         private static readonly string[] suffixes = new string[] {
             ".png",
@@ -203,7 +203,7 @@ namespace ImageResizer.AspNetCore
             if (resizeParams.wmimage != 0)
             {
                 if (watermarkImage != null)
-                    resizedBitmap = Watermark.WatermarkImage(resizedBitmap, resizeParams, watermarkImage);
+                    resizedBitmap = Watermark.WatermarkImage(resizedBitmap, resizeParams, watermarkImage, imagePath);
             }
 
 

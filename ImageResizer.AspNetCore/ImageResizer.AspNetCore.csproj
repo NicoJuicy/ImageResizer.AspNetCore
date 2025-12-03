@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <ApplicationIcon>ImageResizing.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Version>9.0.1</Version>
+    <Version>10.0.1</Version>
     <Authors>Cornel Hattingh</Authors>
     <Description>ImageResizer.Core5 is the image server for ASP.NET CORE. It can be dropped into existing apps and works, enable fast and adaptive websites, and improve your sales by reducing page load time.
 
@@ -26,9 +26,10 @@ Fix Middleware static file lookup path</PackageReleaseNotes>
     <Product>Core5.ImageResizer</Product>
     <AssemblyName>ImageResizer.AspNetCore</AssemblyName>
     <RootNamespace>ImageResizer.AspNetCore</RootNamespace>
-    <AssemblyVersion>9.0.1.0</AssemblyVersion>
+    <AssemblyVersion>10.0.1.0</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <FileVersion>9.0.1.0</FileVersion>
+    <FileVersion>10.0.1.0</FileVersion>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <PropertyGroup>
     <IncludeSymbols>true</IncludeSymbols>
@@ -44,7 +45,7 @@ Fix Middleware static file lookup path</PackageReleaseNotes>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="SkiaSharp" Version="3.119.2-preview.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +58,10 @@ Fix Middleware static file lookup path</PackageReleaseNotes>
       <Pack>True</Pack>
       <PackagePath>
       </PackagePath>
+    </None>
+    <None Include="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 </Project>

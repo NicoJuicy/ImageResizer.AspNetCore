@@ -7,7 +7,7 @@ namespace ImageResizer.AspNetCore.Models
    public class WatermarkImageModel
     {
         public short Key { get; set; }
-        public string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
         public short SizeMeasureType { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }

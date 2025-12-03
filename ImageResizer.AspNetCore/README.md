@@ -2,7 +2,7 @@
 
 A lightweight, fast image processing middleware for ASP.NET Core that enables on-the-fly image resizing, cropping, format conversion, and watermarking through simple URL query parameters.
 
-**Note:** This is a maintained fork of [ImageResizer.AspNetCore](https://github.com/keyone2693/ImageResizer.AspNetCore) updated to support newer .NET versions (.NET 5.0+, including .NET 9.0 and .NET 10.0).
+**Note:** This is a maintained fork of [ImageResizer.AspNetCore](https://github.com/keyone2693/ImageResizer.AspNetCore) updated to support newer .NET versions (targets .NET 8.0, .NET 9.0 and .NET 10.0).
 
 ## Features
 
@@ -17,7 +17,7 @@ A lightweight, fast image processing middleware for ASP.NET Core that enables on
 - **Stretch mode** - Stretch image to exact dimensions
 - **Watermarking** - Add text or image watermarks
 - **Memory caching** - Automatically cache processed images
-- **Multi-framework support** - Supports .NET 5.0+
+- **Multi-framework support** - Supports .NET 8.0, .NET 9.0 and .NET 10.0
 
 ## Installation
 

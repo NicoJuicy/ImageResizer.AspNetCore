@@ -31,22 +31,8 @@ namespace ImageResizer.AspNetCore.Helpers
             }
         }
         
-        internal static SKFilterQuality GetSKFilterQuality(this short quality)
-        {
-            switch (quality)
-            {
-                case 1:
-                    return SKFilterQuality.None;
-                case 2:
-                    return SKFilterQuality.Low;
-                case 3:
-                    return SKFilterQuality.Medium;
-                case 4:
-                    return SKFilterQuality.High;
-                default:
-                    return SKFilterQuality.Medium;
-            }
-        }
+        // GetSKFilterQuality removed — SKFilterQuality is obsolete in SkiaSharp 3.x.
+        // Use GetSKSamplingOptions() where sampling control is required.
 
         internal static SKSamplingOptions GetSKSamplingOptions(this short quality)
         {
