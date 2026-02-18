@@ -8,5 +8,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageResizer.AspNetCore\ImageResizer.AspNetCore.csproj" />
+    <ProjectReference Include="..\Sapico.ImageResizer.Plugin.DiskCache\Sapico.ImageResizer.Plugin.DiskCache.csproj" />
   </ItemGroup>
 </Project>

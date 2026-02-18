@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Sapico.ImageResizer.Plugin.DiskCache;
 
 namespace TestExample
 {
@@ -26,6 +27,7 @@ namespace TestExample
             services.AddControllersWithViews();
             //AddImageResizer
             services.AddImageResizer();
+            services.AddImageResizerDiskCache(f => f.CacheFolder = "cache");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
