@@ -3,7 +3,7 @@
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Version>1.0.0</Version>
+    <Version>10.0.0</Version>
     <Authors>Sapico</Authors>
     <Description>Disk-based cache plugin for Sapico.ImageResizer. Stores processed images on the local filesystem for persistent caching across application restarts.</Description>
     <PackageId>Sapico.ImageResizer.Plugin.DiskCache</PackageId>

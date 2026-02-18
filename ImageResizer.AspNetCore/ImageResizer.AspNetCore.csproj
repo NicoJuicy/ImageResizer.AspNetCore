@@ -5,7 +5,7 @@
     <ApplicationIcon>ImageResizing.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Version>1.0.0</Version>
+    <Version>10.0.0</Version>
     <Authors>Sapico</Authors>
     <Description>Sapico.ImageResizer is a lightweight, fast image processing middleware for ASP.NET Core. On-the-fly image resizing, cropping, format conversion, and watermarking through URL query parameters.
 
