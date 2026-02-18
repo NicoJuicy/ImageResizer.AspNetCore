@@ -1,0 +1,78 @@
+name: Sync README from agents.md
+
+on:
+  push:
+    paths:
+      - 'agents.md'
+    branches:
+      - main
+      - master
+
+jobs:
+  sync-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate README from agents.md
+        run: |
+          node - <<'SCRIPT'
+          const fs = require('fs');
+
+          const agents = fs.readFileSync('agents.md', 'utf8');
+
+          // Extract key sections from agents.md
+          const getSection = (text, heading) => {
+            const re = new RegExp(`^###?\\s+${heading}\\s*$`, 'm');
+            const match = text.match(re);
+            if (!match) return null;
+            const start = match.index + match[0].length;
+            const nextHeading = text.slice(start).search(/^###?\s/m);
+            return nextHeading >= 0 ? text.slice(start, start + nextHeading).trim() : text.slice(start).trim();
+          };
+
+          // Parse query parameter info from agents.md
+          const queryParamSection = getSection(agents, 'Query Parameter Design');
+
+          // Read current README
+          const readme = fs.readFileSync('README.md', 'utf8');
+
+          // Extract the NuGet package name from agents.md
+          const nugetMatch = agents.match(/\*\*NuGet Package\*\*:\s*`([^`]+)`/);
+          const packageName = nugetMatch ? nugetMatch[1] : 'Sapico.ImageResizer';
+
+          // Ensure README title matches agents.md package name
+          let updatedReadme = readme.replace(
+            /^#\s+.+$/m,
+            `# ${packageName}`
+          );
+
+          // Ensure install command matches
+          updatedReadme = updatedReadme.replace(
+            /dotnet add package \S+/g,
+            (match) => {
+              if (match.includes('DiskCache') || match.includes('S3Cache')) return match;
+              return `dotnet add package ${packageName}`;
+            }
+          );
+
+          fs.writeFileSync('README.md', updatedReadme);
+          console.log('README.md synchronized with agents.md');
+          SCRIPT
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet README.md && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "docs: sync README with agents.md"
+          git push

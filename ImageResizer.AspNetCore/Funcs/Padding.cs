@@ -1,7 +1,7 @@
 ﻿using SkiaSharp;
 
 
-namespace ImageResizer.AspNetCore.Funcs
+namespace Sapico.ImageResizer.Funcs
 {
     internal static class Padding
     {

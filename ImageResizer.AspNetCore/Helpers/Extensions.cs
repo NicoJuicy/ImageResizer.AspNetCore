@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using SkiaSharp;
 
-namespace ImageResizer.AspNetCore.Helpers
+namespace Sapico.ImageResizer.Helpers
 {
     public static class Extensions
     {
         public static IServiceCollection AddImageResizer(this IServiceCollection services)
         {
-            return services.AddMemoryCache();
+            services.AddMemoryCache();
+            services.TryAddSingleton<IImageCache, MemoryImageCache>();
+            return services;
         }
 
         public static IApplicationBuilder UseImageResizer(this IApplicationBuilder builder)

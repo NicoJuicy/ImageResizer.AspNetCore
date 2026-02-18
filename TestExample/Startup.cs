@@ -1,4 +1,4 @@
-using ImageResizer.AspNetCore.Helpers;
+using Sapico.ImageResizer.Helpers;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

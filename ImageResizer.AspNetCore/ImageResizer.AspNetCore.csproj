@@ -5,30 +5,27 @@
     <ApplicationIcon>ImageResizing.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Version>10.0.1</Version>
-    <Authors>Cornel Hattingh</Authors>
-    <Description>ImageResizer.Core5 is the image server for ASP.NET CORE. It can be dropped into existing apps and works, enable fast and adaptive websites, and improve your sales by reducing page load time.
+    <Version>1.0.0</Version>
+    <Authors>Sapico</Authors>
+    <Description>Sapico.ImageResizer is a lightweight, fast image processing middleware for ASP.NET Core. On-the-fly image resizing, cropping, format conversion, and watermarking through URL query parameters.
 
-it can do:
-Resize, Crop, Padding, Max, Stretch, Change Quality, Change Format
-Forked from: https://github.com/keyone2693/ImageResizer.AspNetCore
+Forked from: https://github.com/cornelha/ImageResizer.AspNetCore
 </Description>
-    <PackageReleaseNotes>Add Multi Targeting
-Fix Middleware static file lookup path</PackageReleaseNotes>
+    <PackageReleaseNotes>Initial Sapico fork release. Added width/height query parameter aliases, plugin architecture for caching.</PackageReleaseNotes>
     <StartupObject />
-    <PackageId>Core5.ImageResizer</PackageId>
-    <PackageProjectUrl>https://github.com/cornelha/ImageResizer.AspNetCore</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/cornelha/ImageResizer.AspNetCore</RepositoryUrl>
+    <PackageId>Sapico.ImageResizer</PackageId>
+    <PackageProjectUrl>https://github.com/NicoJuicy/ImageResizer.AspNetCore</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/NicoJuicy/ImageResizer.AspNetCore</RepositoryUrl>
     <RepositoryType>public</RepositoryType>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageIcon>ImageResizing.png</PackageIcon>
     <PackageIconUrl />
-    <Product>Core5.ImageResizer</Product>
-    <AssemblyName>ImageResizer.AspNetCore</AssemblyName>
-    <RootNamespace>ImageResizer.AspNetCore</RootNamespace>
-    <AssemblyVersion>10.0.1.0</AssemblyVersion>
+    <Product>Sapico.ImageResizer</Product>
+    <AssemblyName>Sapico.ImageResizer</AssemblyName>
+    <RootNamespace>Sapico.ImageResizer</RootNamespace>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <FileVersion>10.0.1.0</FileVersion>
+    <FileVersion>1.0.0.0</FileVersion>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <PropertyGroup>

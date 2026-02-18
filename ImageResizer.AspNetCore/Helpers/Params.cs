@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ImageResizer.AspNetCore.Helpers
+namespace Sapico.ImageResizer.Helpers
 {
     struct ResizeParams
     {
