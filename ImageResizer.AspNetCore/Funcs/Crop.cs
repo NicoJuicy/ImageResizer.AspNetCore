@@ -1,8 +1,8 @@
-﻿using ImageResizer.AspNetCore.Helpers;
+﻿using Sapico.ImageResizer.Helpers;
 using SkiaSharp;
 using System;
 
-namespace ImageResizer.AspNetCore.Funcs
+namespace Sapico.ImageResizer.Funcs
 {
     internal static class Crop
     {

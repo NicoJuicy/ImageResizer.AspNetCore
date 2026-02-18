@@ -1,7 +1,7 @@
 ﻿using SkiaSharp;
 using System.Linq;
 
-namespace ImageResizer.AspNetCore.Funcs
+namespace Sapico.ImageResizer.Funcs
 {
     internal static class RotateAndFlip
     {

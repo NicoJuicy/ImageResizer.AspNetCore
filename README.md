@@ -1,8 +1,8 @@
-# ImageResizer.AspNetCore (Core5.ImageResizer)
+# Sapico.ImageResizer
 
-A lightweight, fast image processing middleware for ASP.NET Core that enables on-the-fly image resizing, cropping, format conversion, and watermarking through simple URL query parameters.
+A lightweight, fast image processing middleware for ASP.NET Core that enables on-the-fly image resizing, cropping, format conversion, and watermarking through URL query parameters.
 
-**Note:** This is a maintained fork of [ImageResizer.AspNetCore](https://github.com/keyone2693/ImageResizer.AspNetCore) updated to support newer .NET versions (.NET 5.0+, including .NET 9.0 and .NET 10.0).
+**Fork of** [ImageResizer.AspNetCore](https://github.com/cornelha/ImageResizer.AspNetCore) by Cornel Hattingh, which itself was forked from [keyone2693/ImageResizer.AspNetCore](https://github.com/keyone2693/ImageResizer.AspNetCore).
 
 ## Features
 
@@ -17,20 +17,22 @@ A lightweight, fast image processing middleware for ASP.NET Core that enables on
 - **Stretch mode** - Stretch image to exact dimensions
 - **Watermarking** - Add text or image watermarks
 - **Memory caching** - Automatically cache processed images
-- **Multi-framework support** - Supports .NET 5.0+
+- **Plugin architecture** - DiskCache and S3Cache plugins for persistent caching
+- **Multi-framework support** - Supports .NET 8.0, 9.0, 10.0
 
 ## Installation
 
 Install via NuGet:
 
 ```bash
-dotnet add package Core5.ImageResizer
+dotnet add package Sapico.ImageResizer
 ```
 
-Or using Package Manager Console:
+Optional cache plugins:
 
-```powershell
-Install-Package Core5.ImageResizer
+```bash
+dotnet add package Sapico.ImageResizer.Plugin.DiskCache
+dotnet add package Sapico.ImageResizer.Plugin.S3Cache
 ```
 
 ## Quick Start
@@ -40,7 +42,7 @@ Install-Package Core5.ImageResizer
 In your `Program.cs` (ASP.NET Core 6+):
 
 ```csharp
-using ImageResizer.AspNetCore;
+using Sapico.ImageResizer.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,28 +58,13 @@ app.UseImageResizer();
 app.Run();
 ```
 
-Or in `Startup.cs` (ASP.NET Core 5):
-
-```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddImageResizer();
-}
-
-public void Configure(IApplicationBuilder app)
-{
-    app.UseStaticFiles();
-    app.UseImageResizer();
-}
-```
-
 ### 2. Use in HTML
 
 Simply add query parameters to your image URLs:
 
 ```html
 <img src="~/images/photo.jpg?w=200" alt="Resized" />
-<img src="~/images/photo.jpg?w=200&h=300" alt="Resized with height" />
+<img src="~/images/photo.jpg?width=200&height=300" alt="Resized with height" />
 ```
 
 ## Usage Examples
@@ -88,31 +75,20 @@ Resize to a specific width (height auto-calculated to maintain aspect ratio):
 
 ```html
 <img src="~/images/photo.jpg?w=300" alt="Width 300px" />
+<img src="~/images/photo.jpg?width=300" alt="Width 300px (alternative)" />
 ```
 
 Resize to a specific height (width auto-calculated):
 
 ```html
 <img src="~/images/photo.jpg?h=400" alt="Height 400px" />
-```
-
-Resize to specific width and height with auto-detection of best fit:
-
-```html
-<img src="~/images/photo.jpg?w=200&h=200" alt="Max fit" />
+<img src="~/images/photo.jpg?height=400" alt="Height 400px (alternative)" />
 ```
 
 ### Format Conversion
 
-Convert to PNG:
-
 ```html
 <img src="~/images/photo.jpg?format=png" alt="PNG format" />
-```
-
-Convert to JPEG with quality setting:
-
-```html
 <img src="~/images/photo.png?format=jpg&quality=80" alt="JPEG format" />
 ```
 
@@ -144,30 +120,14 @@ Convert to JPEG with quality setting:
 
 ### Quality Control
 
-Adjust compression quality (1-100, default 100):
-
 ```html
 <img src="~/images/photo.jpg?w=800&quality=75" alt="Optimized" />
 ```
 
 ### Auto-Rotation
 
-Enable automatic EXIF-based rotation:
-
 ```html
 <img src="~/images/photo.jpg?autorotate=true" alt="Auto-rotated" />
-```
-
-### Combined Parameters
-
-Use multiple parameters together:
-
-```html
-<!-- Resize to 500x300, crop to fill, JPEG format, 80% quality -->
-<img src="~/images/photo.jpg?w=500&h=300&mode=crop&format=jpg&quality=80" alt="Optimized" />
-
-<!-- Resize width to 400, auto-height, PNG format, auto-rotate -->
-<img src="~/images/photo.jpg?w=400&format=png&autorotate=true" alt="Responsive" />
 ```
 
 ### Watermarking
@@ -186,37 +146,76 @@ Add image watermark:
 
 ## Query Parameters Reference
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `w` | int | 0 | Width in pixels (0 = auto-calculate) |
-| `h` | int | 0 | Height in pixels (0 = auto-calculate) |
-| `mode` | string | max | Resize mode: `max`, `pad`, `crop`, `stretch` |
-| `format` | string | original | Output format: `jpg`, `jpeg`, `png` |
-| `quality` | int | 100 | JPEG quality (1-100) |
-| `autorotate` | bool | false | Auto-rotate based on EXIF orientation |
-| `wmtext` | int | 0 | Text watermark ID (requires config) |
-| `wmimage` | int | 0 | Image watermark ID (requires config) |
+| Parameter | Alias | Type | Default | Description |
+|-----------|-------|------|---------|-------------|
+| `w` | `width` | int | 0 | Width in pixels (0 = auto-calculate) |
+| `h` | `height` | int | 0 | Height in pixels (0 = auto-calculate) |
+| `mode` | | string | max | Resize mode: `max`, `pad`, `crop`, `stretch` |
+| `format` | | string | original | Output format: `jpg`, `jpeg`, `png` |
+| `quality` | | int | 100 | JPEG quality (1-100) |
+| `autorotate` | | bool | false | Auto-rotate based on EXIF orientation |
+| `wmtext` | | int | 0 | Text watermark ID (requires config) |
+| `wmimage` | | int | 0 | Image watermark ID (requires config) |
+
+## Cache Plugins
+
+### DiskCache
+
+Stores processed images on the local filesystem. Default cache folder: `~/cache`.
+
+```csharp
+using Sapico.ImageResizer.Plugin.DiskCache;
+
+builder.Services.AddImageResizer();
+builder.Services.AddImageResizerDiskCache(options =>
+{
+    options.CacheFolder = "/var/cache/imageresizer"; // optional, default: ~/cache
+});
+```
+
+### S3Cache
+
+Stores processed images in an Amazon S3 bucket.
+
+```csharp
+using Sapico.ImageResizer.Plugin.S3Cache;
+
+builder.Services.AddImageResizer();
+builder.Services.AddImageResizerS3Cache(options =>
+{
+    options.BucketName = "my-image-cache";
+    options.Region = "us-east-1";
+    options.Prefix = "cache/";  // optional key prefix
+});
+```
 
 ## Watermark Configuration
 
-To use watermarks, create an `ImageResizerJson.json` file in your `wwwroot` directory:
+Create an `ImageResizerJson.json` file in your `wwwroot` directory:
 
 ```json
 {
   "WatermarkTextList": [
     {
       "Key": 1,
-      "Text": "© 2024 MyCompany",
+      "Value": "© 2024 MyCompany",
       "Color": "#FFFFFF",
-      "Size": 30,
-      "Opacity": 0.7
+      "TextSize": 30,
+      "PositionMeasureType": 2,
+      "X": 50,
+      "Y": 90
     }
   ],
   "WatermarkImageList": [
     {
       "Key": 1,
-      "ImagePath": "/images/watermark.png",
-      "Opacity": 0.5
+      "Url": "/images/watermark.png",
+      "SizeMeasureType": 2,
+      "Width": 20,
+      "Height": 0,
+      "PositionMeasureType": 1,
+      "Right": 10,
+      "Bottom": 10
     }
   ]
 }
@@ -225,8 +224,8 @@ To use watermarks, create an `ImageResizerJson.json` file in your `wwwroot` dire
 ## Performance
 
 - **Memory caching** - Processed images are automatically cached in memory
+- **Persistent caching** - Optional DiskCache or S3Cache plugins for cross-restart persistence
 - **Fast processing** - Uses SkiaSharp for efficient image manipulation
-- **Responsive** - Query parameters are parsed only when needed
 - **Lightweight** - Minimal dependencies
 
 ## Supported Image Formats
@@ -234,15 +233,10 @@ To use watermarks, create an `ImageResizerJson.json` file in your `wwwroot` dire
 - **Input**: PNG, JPG, JPEG
 - **Output**: PNG, JPG, JPEG
 
-## Browser Compatibility
-
-Works with all modern browsers that support standard image tags. The resizing happens server-side, so all clients can view the resized images.
-
 ## License
 
 See LICENSE file for details.
 
 ## Support
 
-For issues, feature requests, or questions:
-- GitHub: [https://github.com/cornelha/ImageResizer.AspNetCore](https://github.com/cornelha/ImageResizer.AspNetCore)
+- GitHub: [https://github.com/NicoJuicy/ImageResizer.AspNetCore](https://github.com/NicoJuicy/ImageResizer.AspNetCore)

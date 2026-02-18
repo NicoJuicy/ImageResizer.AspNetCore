@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using SkiaSharp;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ImageResizer.AspNetCore.Helpers;
+using Sapico.ImageResizer.Helpers;
 using System.Threading.Tasks;
-using ImageResizer.AspNetCore.Funcs;
+using Sapico.ImageResizer.Funcs;
 using Newtonsoft.Json;
-using ImageResizer.AspNetCore.Models;
+using Sapico.ImageResizer.Models;
 using Microsoft.Extensions.FileProviders;
 
-namespace ImageResizer.AspNetCore
+namespace Sapico.ImageResizer
 {
     public class ImageResizerMiddleware
     {
@@ -23,7 +22,7 @@ namespace ImageResizer.AspNetCore
         private readonly RequestDelegate _req;
         private readonly ILogger<ImageResizerMiddleware> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly IMemoryCache _memoryCache;
+        private readonly IImageCache _imageCache;
         private WatermarkTextModel? watermarkText;
         private WatermarkImageModel? watermarkImage;
 
@@ -33,12 +32,12 @@ namespace ImageResizer.AspNetCore
             ".jpeg"
         };
 
-        public ImageResizerMiddleware(RequestDelegate req, IWebHostEnvironment env, ILogger<ImageResizerMiddleware> logger, IMemoryCache memoryCache)
+        public ImageResizerMiddleware(RequestDelegate req, IWebHostEnvironment env, ILogger<ImageResizerMiddleware> logger, IImageCache imageCache)
         {
             _req = req;
             _env = env;
             _logger = logger;
-            _memoryCache = memoryCache;
+            _imageCache = imageCache;
 
         }
         public async Task InvokeAsync(HttpContext context)
@@ -136,7 +135,7 @@ namespace ImageResizer.AspNetCore
 
             SKData imageData;
             byte[] imageBytes;
-           bool isCached = _memoryCache.TryGetValue<byte[]>(cacheKey, out imageBytes);
+            bool isCached = _imageCache.TryGet(cacheKey, out imageBytes);
             if (isCached)
             {
                 _logger.LogInformation("Serving from cache");
@@ -213,7 +212,7 @@ namespace ImageResizer.AspNetCore
             imageData = resizedImage.Encode(encodeFormat, resizeParams.quality);
 
             // cache the result
-            _memoryCache.Set<byte[]>(cacheKey, imageData.ToArray());
+            _imageCache.Set(cacheKey, imageData.ToArray());
 
             // cleanup
             resizedImage.Dispose();
@@ -255,15 +254,28 @@ namespace ImageResizer.AspNetCore
             return suffixes.Any(x => x.EndsWith(x, StringComparison.OrdinalIgnoreCase));
         }
 
+        private static bool QueryContainsKeyIgnoreCase(IQueryCollection query, string key)
+        {
+            return query.Keys.Any(k => string.Equals(k, key, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static string QueryValueIgnoreCase(IQueryCollection query, string key)
+        {
+            var match = query.Keys.FirstOrDefault(k => string.Equals(k, key, StringComparison.OrdinalIgnoreCase));
+            return match != null ? query[match].ToString() : null;
+        }
+
         private ResizeParams GetResizeParams(PathString path, IQueryCollection query)
         {
             ResizeParams resizeParams = new ResizeParams();
 
-            // before we extract, do a quick check for resize params
+            // check for resize params (field names or aliases)
             resizeParams.hasParams =
                 resizeParams.GetType().GetTypeInfo()
                 .GetFields().Where(f => f.Name != "hasParams")
-                .Any(f => query.ContainsKey(f.Name));
+                .Any(f => QueryContainsKeyIgnoreCase(query, f.Name))
+                || QueryContainsKeyIgnoreCase(query, "width")
+                || QueryContainsKeyIgnoreCase(query, "height");
 
             // if no params present, bug out
             if (!resizeParams.hasParams)
@@ -271,41 +283,45 @@ namespace ImageResizer.AspNetCore
 
             // extract resize params
 
-            if (query.ContainsKey("format"))
-                resizeParams.format = query["format"];
+            if (QueryContainsKeyIgnoreCase(query, "format"))
+                resizeParams.format = QueryValueIgnoreCase(query, "format");
             else
                 resizeParams.format = path.Value.Substring(path.Value.LastIndexOf('.') + 1);
 
-            if (query.ContainsKey("autorotate"))
-                bool.TryParse(query["autorotate"], out resizeParams.autorotate);
+            if (QueryContainsKeyIgnoreCase(query, "autorotate"))
+                bool.TryParse(QueryValueIgnoreCase(query, "autorotate"), out resizeParams.autorotate);
 
             int quality = 100;
-            if (query.ContainsKey("quality"))
-                int.TryParse(query["quality"], out quality);
+            if (QueryContainsKeyIgnoreCase(query, "quality"))
+                int.TryParse(QueryValueIgnoreCase(query, "quality"), out quality);
             resizeParams.quality = quality;
 
             int w = 0;
-            if (query.ContainsKey("w"))
-                int.TryParse(query["w"], out w);
+            if (QueryContainsKeyIgnoreCase(query, "w"))
+                int.TryParse(QueryValueIgnoreCase(query, "w"), out w);
+            else if (QueryContainsKeyIgnoreCase(query, "width"))
+                int.TryParse(QueryValueIgnoreCase(query, "width"), out w);
             resizeParams.w = w;
 
             int h = 0;
-            if (query.ContainsKey("h"))
-                int.TryParse(query["h"], out h);
+            if (QueryContainsKeyIgnoreCase(query, "h"))
+                int.TryParse(QueryValueIgnoreCase(query, "h"), out h);
+            else if (QueryContainsKeyIgnoreCase(query, "height"))
+                int.TryParse(QueryValueIgnoreCase(query, "height"), out h);
             resizeParams.h = h;
 
             resizeParams.mode = "max";
             // only apply mode if it's a valid mode and both w and h are specified
-            if (h != 0 && w != 0 && query.ContainsKey("mode") && ResizeParams.modes.Any(m => query["mode"] == m))
-                resizeParams.mode = query["mode"];
+            if (h != 0 && w != 0 && QueryContainsKeyIgnoreCase(query, "mode") && ResizeParams.modes.Any(m => QueryValueIgnoreCase(query, "mode") == m))
+                resizeParams.mode = QueryValueIgnoreCase(query, "mode");
 
-            if (query.ContainsKey("wmtext"))
-                resizeParams.wmtext = short.Parse(query["wmtext"]);
+            if (QueryContainsKeyIgnoreCase(query, "wmtext"))
+                resizeParams.wmtext = short.Parse(QueryValueIgnoreCase(query, "wmtext"));
             else
                 resizeParams.wmtext = 0;
 
-            if (query.ContainsKey("wmimage"))
-                resizeParams.wmimage = short.Parse(query["wmimage"]);
+            if (QueryContainsKeyIgnoreCase(query, "wmimage"))
+                resizeParams.wmimage = short.Parse(QueryValueIgnoreCase(query, "wmimage"));
             else
                 resizeParams.wmimage = 0;
 

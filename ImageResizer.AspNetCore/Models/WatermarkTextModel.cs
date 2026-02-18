@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ImageResizer.AspNetCore.Models
+namespace Sapico.ImageResizer.Models
 {
     public class WatermarkTextModel
     {

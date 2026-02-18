@@ -1,10 +1,10 @@
-﻿using ImageResizer.AspNetCore.Helpers;
-using ImageResizer.AspNetCore.Models;
+﻿using Sapico.ImageResizer.Helpers;
+using Sapico.ImageResizer.Models;
 using SkiaSharp;
 using System;
 using System.IO;
 
-namespace ImageResizer.AspNetCore.Funcs
+namespace Sapico.ImageResizer.Funcs
 {
     internal static class Watermark
     {

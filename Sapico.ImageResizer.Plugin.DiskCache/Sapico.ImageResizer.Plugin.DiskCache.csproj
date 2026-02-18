@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Version>1.0.0</Version>
+    <Authors>Sapico</Authors>
+    <Description>Disk-based cache plugin for Sapico.ImageResizer. Stores processed images on the local filesystem for persistent caching across application restarts.</Description>
+    <PackageId>Sapico.ImageResizer.Plugin.DiskCache</PackageId>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RootNamespace>Sapico.ImageResizer.Plugin.DiskCache</RootNamespace>
+    <AssemblyName>Sapico.ImageResizer.Plugin.DiskCache</AssemblyName>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ImageResizer.AspNetCore\ImageResizer.AspNetCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>
+      </PackagePath>
+    </None>
+  </ItemGroup>
+</Project>
