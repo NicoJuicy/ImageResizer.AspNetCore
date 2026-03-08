@@ -1,9 +1,8 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29609.76
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11505.172 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageResizer.AspNetCore", "ImageResizer.AspNetCore\ImageResizer.AspNetCore.csproj", "{524EDD8B-4CCC-43AD-8C64-5AFB99BC55A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sapico.ImageResizer.AspNetCore", "ImageResizer.AspNetCore\Sapico.ImageResizer.AspNetCore.csproj", "{524EDD8B-4CCC-43AD-8C64-5AFB99BC55A8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestExample", "TestExample\TestExample.csproj", "{5CDC3CC8-E682-4911-85D0-A7C56F0C2476}"
 EndProject

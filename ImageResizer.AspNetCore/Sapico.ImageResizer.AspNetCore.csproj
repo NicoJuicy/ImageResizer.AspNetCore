@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <ApplicationIcon>ImageResizing.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Version>10.0.0</Version>
+    <Authors>Sapico</Authors>
+    <Description>Sapico.ImageResizer is a lightweight, fast image processing middleware for ASP.NET Core. On-the-fly image resizing, cropping, format conversion, and watermarking through URL query parameters.
+
+Forked from: https://github.com/cornelha/ImageResizer.AspNetCore
+</Description>
+    <PackageReleaseNotes>Initial Sapico fork release. Added width/height query parameter aliases, plugin architecture for caching.</PackageReleaseNotes>
+    <StartupObject />
+    <PackageId>Sapico.ImageResizer</PackageId>
+    <PackageProjectUrl>https://github.com/NicoJuicy/ImageResizer.AspNetCore</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/NicoJuicy/ImageResizer.AspNetCore</RepositoryUrl>
+    <RepositoryType>public</RepositoryType>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>ImageResizing.png</PackageIcon>
+    <PackageIconUrl />
+    <Product>Sapico.ImageResizer</Product>
+    <AssemblyName>Sapico.ImageResizer</AssemblyName>
+    <RootNamespace>Sapico.ImageResizer</RootNamespace>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <FileVersion>1.0.0.0</FileVersion>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>
+      </PackagePath>
+    </None>
+    <None Include="ImageResizing.png">
+      <Pack>True</Pack>
+      <PackagePath>
+      </PackagePath>
+    </None>
+    <None Include="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

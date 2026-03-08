@@ -26,8 +26,8 @@ namespace TestExample
         {
             services.AddControllersWithViews();
             //AddImageResizer
-            services.AddImageResizer();
-            services.AddImageResizerDiskCache(f => f.CacheFolder = "cache");
+            //services.AddImageResizer();
+            services.AddImageResizerDiskCache(f => f.CacheFolder = "img-cache");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

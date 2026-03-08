@@ -7,7 +7,7 @@
     <PackageReference Include="SkiaSharp" Version="3.119.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ImageResizer.AspNetCore\ImageResizer.AspNetCore.csproj" />
+    <ProjectReference Include="..\ImageResizer.AspNetCore\Sapico.ImageResizer.AspNetCore.csproj" />
     <ProjectReference Include="..\Sapico.ImageResizer.Plugin.DiskCache\Sapico.ImageResizer.Plugin.DiskCache.csproj" />
   </ItemGroup>
 </Project>
