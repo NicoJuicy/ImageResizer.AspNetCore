@@ -1,8 +1,8 @@
-# ImageResizer.AspNetCore (Core5.ImageResizer)
+# Sapico.ImageResizer
 
 A lightweight, fast image processing middleware for ASP.NET Core that enables on-the-fly image resizing, cropping, format conversion, and watermarking through simple URL query parameters.
 
-**Note:** This is a maintained fork of [ImageResizer.AspNetCore](https://github.com/keyone2693/ImageResizer.AspNetCore) updated to support newer .NET versions (targets .NET 8.0, .NET 9.0 and .NET 10.0).
+**Note:** This is a maintained fork of [ImageResizer.AspNetCore](https://github.com/cornelha/ImageResizer.AspNetCore) updated to support .NET 10.0 with added features including width/height query parameter aliases, plugin architecture for caching, and Linux native asset support.
 
 ## Features
 
@@ -16,21 +16,26 @@ A lightweight, fast image processing middleware for ASP.NET Core that enables on
 - **Crop mode** - Crop to exact dimensions
 - **Stretch mode** - Stretch image to exact dimensions
 - **Watermarking** - Add text or image watermarks
-- **Memory caching** - Automatically cache processed images
-- **Multi-framework support** - Supports .NET 8.0, .NET 9.0 and .NET 10.0
+- **Flexible query parameters** - Use `w`/`width` and `h`/`height` aliases (case-insensitive)
+- **Plugin architecture** - Extensible caching system with IImageCache interface
+- **Memory caching** - Default in-memory cache for processed images
+- **Disk cache plugin** - Optional filesystem-based persistent cache (Sapico.ImageResizer.Plugin.DiskCache)
+- **S3 cache plugin** - Optional S3-based distributed cache (Sapico.ImageResizer.Plugin.S3Cache)
+- **Linux support** - Includes SkiaSharp native assets for Linux
+- **.NET 10 support** - Targets .NET 10.0
 
 ## Installation
 
 Install via NuGet:
 
 ```bash
-dotnet add package Core5.ImageResizer
+dotnet add package Sapico.ImageResizer
 ```
 
 Or using Package Manager Console:
 
 ```powershell
-Install-Package Core5.ImageResizer
+Install-Package Sapico.ImageResizer
 ```
 
 ## Quick Start
@@ -40,7 +45,7 @@ Install-Package Core5.ImageResizer
 In your `Program.cs` (ASP.NET Core 6+):
 
 ```csharp
-using ImageResizer.AspNetCore;
+using Sapico.ImageResizer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,8 +82,10 @@ Simply add query parameters to your image URLs:
 
 ```html
 <img src="~/images/photo.jpg?w=200" alt="Resized" />
-<img src="~/images/photo.jpg?w=200&h=300" alt="Resized with height" />
+<img src="~/images/photo.jpg?width=200&height=300" alt="Resized with height" />
 ```
+
+**Note:** You can use either `w`/`h` or `width`/`height` (case-insensitive) as query parameters.
 
 ## Usage Examples
 
@@ -188,14 +195,110 @@ Add image watermark:
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `w` | int | 0 | Width in pixels (0 = auto-calculate) |
-| `h` | int | 0 | Height in pixels (0 = auto-calculate) |
+| `w` or `width` | int | 0 | Width in pixels (0 = auto-calculate, case-insensitive) |
+| `h` or `height` | int | 0 | Height in pixels (0 = auto-calculate, case-insensitive) |
 | `mode` | string | max | Resize mode: `max`, `pad`, `crop`, `stretch` |
 | `format` | string | original | Output format: `jpg`, `jpeg`, `png` |
 | `quality` | int | 100 | JPEG quality (1-100) |
 | `autorotate` | bool | false | Auto-rotate based on EXIF orientation |
 | `wmtext` | int | 0 | Text watermark ID (requires config) |
 | `wmimage` | int | 0 | Image watermark ID (requires config) |
+
+## Cache Plugins
+
+Sapico.ImageResizer includes a plugin architecture for caching processed images. By default, it uses an in-memory cache (`MemoryImageCache`), but you can use additional cache plugins for persistence and distributed scenarios.
+
+### Disk Cache Plugin
+
+Install the disk cache plugin for persistent filesystem-based caching:
+
+```bash
+dotnet add package Sapico.ImageResizer.Plugin.DiskCache
+```
+
+Configure in `Program.cs`:
+
+```csharp
+using Sapico.ImageResizer;
+using Sapico.ImageResizer.Plugin.DiskCache;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// AddImageResizerDiskCache replaces AddImageResizer — no need to call both
+builder.Services.AddImageResizerDiskCache(options =>
+{
+    options.CacheFolder = Path.Combine(builder.Environment.ContentRootPath, "cache", "images");
+});
+
+var app = builder.Build();
+app.UseStaticFiles();
+app.UseImageResizer();
+app.Run();
+```
+
+`AddImageResizerDiskCache` already registers `IMemoryCache` and `IImageCache`, so calling `AddImageResizer` separately is not required. The `CacheFolder` defaults to `~/cache` in the user profile directory if not specified. You can also call `AddImageResizerDiskCache()` without options to use the default.
+
+**Benefits:**
+- Persistent cache survives application restarts
+- Reduces processing load for frequently accessed images
+- Uses in-memory + disk two-tier caching for fast lookups
+
+### S3 Cache Plugin
+
+Install the S3 cache plugin for distributed cloud-based caching:
+
+```bash
+dotnet add package Sapico.ImageResizer.Plugin.S3Cache
+```
+
+Configure in `Program.cs`:
+
+```csharp
+using Sapico.ImageResizer;
+using Sapico.ImageResizer.Plugin.S3Cache;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// AddImageResizerS3Cache replaces AddImageResizer — no need to call both
+builder.Services.AddImageResizerS3Cache(options =>
+{
+    options.BucketName = "my-image-cache";
+    options.Region = "us-east-1";
+    options.Prefix = "resized/"; // optional key prefix in S3
+    options.AccessKey = builder.Configuration["AWS:AccessKey"];
+    options.SecretKey = builder.Configuration["AWS:SecretKey"];
+});
+
+var app = builder.Build();
+app.UseStaticFiles();
+app.UseImageResizer();
+app.Run();
+```
+
+If `AccessKey`/`SecretKey` are omitted, the plugin falls back to the default AWS credential chain (environment variables, IAM role, etc.).
+
+**Benefits:**
+- Distributed caching across multiple application instances
+- Scales with your cloud infrastructure
+- Ideal for load-balanced or serverless deployments
+
+### Custom Cache Plugin
+
+You can create your own cache plugin by implementing the `IImageCache` interface:
+
+```csharp
+public interface IImageCache
+{
+    bool TryGet(long key, out byte[] imageBytes);
+    void Set(long key, byte[] imageBytes);
+}
+```
+
+Register your custom cache implementation in `Program.cs`:
+
+```csharp
+builder.Services.AddSingleton<IImageCache, MyCustomImageCache>();
+```
 
 ## Watermark Configuration
 
@@ -224,10 +327,12 @@ To use watermarks, create an `ImageResizerJson.json` file in your `wwwroot` dire
 
 ## Performance
 
-- **Memory caching** - Processed images are automatically cached in memory
+- **Memory caching** - Default in-memory cache for processed images with configurable expiration
+- **Plugin architecture** - Extensible cache system (Disk, S3, or custom implementations)
 - **Fast processing** - Uses SkiaSharp for efficient image manipulation
 - **Responsive** - Query parameters are parsed only when needed
 - **Lightweight** - Minimal dependencies
+- **Linux support** - Includes native SkiaSharp assets for Linux deployments
 
 ## Supported Image Formats
 
@@ -245,4 +350,20 @@ See LICENSE file for details.
 ## Support
 
 For issues, feature requests, or questions:
-- GitHub: [https://github.com/cornelha/ImageResizer.AspNetCore](https://github.com/cornelha/ImageResizer.AspNetCore)
+- GitHub: [https://github.com/NicoJuicy/ImageResizer.AspNetCore](https://github.com/NicoJuicy/ImageResizer.AspNetCore)
+
+## Version History
+
+### v10.0.2 (Latest)
+- **Linux native assets support** - Added SkiaSharp.NativeAssets.Linux for Linux deployments
+- **.NET 10 only** - Simplified to target only .NET 10.0
+- **Version bump** - Updated dependencies to latest .NET 10 packages
+
+### v10.0.0
+- **Sapico.ImageResizer fork** - Renamed from Core5.ImageResizer to Sapico.ImageResizer
+- **Width/Height aliases** - Added case-insensitive `width`/`height` query parameter aliases
+- **Plugin architecture** - Introduced `IImageCache` abstraction for extensible caching
+- **DiskCache plugin** - Filesystem-based persistent cache
+- **S3Cache plugin** - S3-based distributed cache
+- **Namespace changes** - Migrated from `ImageResizer.AspNetCore` to `Sapico.ImageResizer`
+
