@@ -221,6 +221,27 @@ Create an `ImageResizerJson.json` file in your `wwwroot` directory:
 }
 ```
 
+## Docker
+
+A `Dockerfile` is provided in the `TestExample` project for containerized deployments.
+
+### SkiaSharp Linux Dependencies
+
+On Linux, SkiaSharp requires two layers of support:
+
+1. **`SkiaSharp.NativeAssets.Linux`** — Automatically included on Linux builds via `Directory.Build.props`. This NuGet package provides the native `libSkiaSharp.so` binary.
+2. **`libfontconfig1`** — A system-level library for font discovery and rendering that SkiaSharp links against at runtime. The `dotnet/aspnet` base image does not include it, so it must be installed explicitly in the Dockerfile.
+
+Both are required. Without `libfontconfig1`, SkiaSharp will throw a runtime `DllNotFoundException`.
+
+### Build & Run
+
+```bash
+# From the repository root
+docker build -f TestExample/Dockerfile -t imageresizer-test .
+docker run -p 8080:8080 imageresizer-test
+```
+
 ## Performance
 
 - **Memory caching** - Processed images are automatically cached in memory
