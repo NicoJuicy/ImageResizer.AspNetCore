@@ -5,7 +5,7 @@
     <ApplicationIcon>ImageResizing.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Version>10.0.5</Version>
+    <Version>10.0.6</Version>
     <Authors>Sapico</Authors>
     <Description>Sapico.ImageResizer is a lightweight, fast image processing middleware for ASP.NET Core. On-the-fly image resizing, cropping, format conversion, and watermarking through URL query parameters.
 
@@ -23,9 +23,9 @@ Forked from: https://github.com/cornelha/ImageResizer.AspNetCore
     <Product>Sapico.ImageResizer</Product>
     <AssemblyName>Sapico.ImageResizer</AssemblyName>
     <RootNamespace>Sapico.ImageResizer</RootNamespace>
-    <AssemblyVersion>1.0.0.3</AssemblyVersion>
+    <AssemblyVersion>10.0.6</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <FileVersion>1.0.0.3</FileVersion>
+    <FileVersion>10.0.6</FileVersion>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <PropertyGroup>
@@ -44,6 +44,9 @@ Forked from: https://github.com/cornelha/ImageResizer.AspNetCore
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="SkiaSharp" Version="3.119.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">
