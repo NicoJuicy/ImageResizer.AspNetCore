@@ -1,0 +1,6 @@
+<Project>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux')) Or $(RuntimeIdentifier.StartsWith('linux'))">
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1"
+                      Condition="@(PackageReference->AnyHaveMetadataValue('Identity','SkiaSharp')) And !@(PackageReference->AnyHaveMetadataValue('Identity','SkiaSharp.NativeAssets.Linux.NoDependencies'))" />
+  </ItemGroup>
+</Project>
