@@ -12,7 +12,6 @@ namespace Sapico.ImageResizer.Plugin.DiskCache
             else
                 services.Configure<DiskCacheOptions>(_ => { });
 
-            services.AddMemoryCache();
             services.AddSingleton<IImageCache, DiskImageCache>();
             return services;
         }
