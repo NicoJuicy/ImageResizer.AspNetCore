@@ -43,7 +43,6 @@ Forked from: https://github.com/cornelha/ImageResizer.AspNetCore
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="SkiaSharp" Version="3.119.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup>
