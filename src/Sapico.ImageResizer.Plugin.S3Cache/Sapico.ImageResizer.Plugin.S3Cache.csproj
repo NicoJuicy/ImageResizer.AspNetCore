@@ -13,13 +13,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ImageResizer.AspNetCore\Sapico.ImageResizer.AspNetCore.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.*" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\LICENSE">
+    <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath>
       </PackagePath>

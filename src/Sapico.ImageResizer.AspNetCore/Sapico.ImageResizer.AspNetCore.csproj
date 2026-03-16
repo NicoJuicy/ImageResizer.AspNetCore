@@ -46,7 +46,7 @@ Forked from: https://github.com/cornelha/ImageResizer.AspNetCore
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\LICENSE">
+    <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath>
       </PackagePath>
@@ -56,7 +56,7 @@ Forked from: https://github.com/cornelha/ImageResizer.AspNetCore
       <PackagePath>
       </PackagePath>
     </None>
-    <None Include="README.md">
+    <None Include="..\..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

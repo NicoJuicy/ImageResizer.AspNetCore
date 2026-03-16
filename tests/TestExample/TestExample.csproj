@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
   </PropertyGroup>
@@ -7,7 +7,7 @@
     <PackageReference Include="SkiaSharp" Version="3.119.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ImageResizer.AspNetCore\Sapico.ImageResizer.AspNetCore.csproj" />
-    <ProjectReference Include="..\Sapico.ImageResizer.Plugin.DiskCache\Sapico.ImageResizer.Plugin.DiskCache.csproj" />
+    <ProjectReference Include="..\..\src\Sapico.ImageResizer.AspNetCore\Sapico.ImageResizer.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\src\Sapico.ImageResizer.Plugin.DiskCache\Sapico.ImageResizer.Plugin.DiskCache.csproj" />
   </ItemGroup>
 </Project>

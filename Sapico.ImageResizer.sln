@@ -1,0 +1,59 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11505.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AF616C38-D77F-41A6-B833-EB2965305664}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EC619B93-3A86-40A5-836F-29571E870B14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6EA41544-954E-44DF-838C-89A16B873FDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sapico.ImageResizer.AspNetCore", "src\Sapico.ImageResizer.AspNetCore\Sapico.ImageResizer.AspNetCore.csproj", "{4BE4874B-5182-9D78-03D6-9CD933CBAED3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sapico.ImageResizer.Plugin.DiskCache", "src\Sapico.ImageResizer.Plugin.DiskCache\Sapico.ImageResizer.Plugin.DiskCache.csproj", "{52DFF595-35C4-6208-B64B-BA4EFBB89798}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sapico.ImageResizer.Plugin.S3Cache", "src\Sapico.ImageResizer.Plugin.S3Cache\Sapico.ImageResizer.Plugin.S3Cache.csproj", "{F206BA37-B959-8615-D040-DADE41D0A998}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExample", "tests\TestExample\TestExample.csproj", "{D9F46AC6-80A4-3FB8-806D-B8E8299B1505}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4BE4874B-5182-9D78-03D6-9CD933CBAED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BE4874B-5182-9D78-03D6-9CD933CBAED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BE4874B-5182-9D78-03D6-9CD933CBAED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BE4874B-5182-9D78-03D6-9CD933CBAED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52DFF595-35C4-6208-B64B-BA4EFBB89798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52DFF595-35C4-6208-B64B-BA4EFBB89798}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52DFF595-35C4-6208-B64B-BA4EFBB89798}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52DFF595-35C4-6208-B64B-BA4EFBB89798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F206BA37-B959-8615-D040-DADE41D0A998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F206BA37-B959-8615-D040-DADE41D0A998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F206BA37-B959-8615-D040-DADE41D0A998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F206BA37-B959-8615-D040-DADE41D0A998}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9F46AC6-80A4-3FB8-806D-B8E8299B1505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9F46AC6-80A4-3FB8-806D-B8E8299B1505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9F46AC6-80A4-3FB8-806D-B8E8299B1505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9F46AC6-80A4-3FB8-806D-B8E8299B1505}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4BE4874B-5182-9D78-03D6-9CD933CBAED3} = {EC619B93-3A86-40A5-836F-29571E870B14}
+		{52DFF595-35C4-6208-B64B-BA4EFBB89798} = {EC619B93-3A86-40A5-836F-29571E870B14}
+		{F206BA37-B959-8615-D040-DADE41D0A998} = {EC619B93-3A86-40A5-836F-29571E870B14}
+		{D9F46AC6-80A4-3FB8-806D-B8E8299B1505} = {6EA41544-954E-44DF-838C-89A16B873FDD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {927CE114-1AA5-4748-B04E-C7FF45E9F207}
+	EndGlobalSection
+EndGlobal

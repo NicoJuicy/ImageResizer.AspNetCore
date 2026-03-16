@@ -230,17 +230,32 @@ A `Dockerfile` is provided in the `TestExample` project for containerized deploy
 On Linux, SkiaSharp requires two layers of support:
 
 1. **`SkiaSharp.NativeAssets.Linux`** — Automatically included on Linux builds via `Directory.Build.props`. This NuGet package provides the native `libSkiaSharp.so` binary.
-2. **`libfontconfig1`** — A system-level library for font discovery and rendering that SkiaSharp links against at runtime. The `dotnet/aspnet` base image does not include it, so it must be installed explicitly in the Dockerfile.
+2. **Fontconfig system library** — A system-level library for font discovery and rendering that SkiaSharp links against at runtime.
+   - Debian/Ubuntu images: `libfontconfig1` (installed via `apt-get` in the Dockerfile)
+   - Alpine images: `fontconfig` (installed via `apk` in the Alpine Dockerfile)
 
 Both are required. Without `libfontconfig1`, SkiaSharp will throw a runtime `DllNotFoundException`.
 
 ### Build & Run
 
+#### Linux (Debian-based)
+
 ```bash
 # From the repository root
-docker build -f TestExample/Dockerfile -t imageresizer-test .
+docker build -f tests/TestExample/Dockerfile -t imageresizer-test .
 docker run -p 8080:8080 imageresizer-test
 ```
+
+
+#### Alpine
+
+```bash
+# From the repository root
+docker build -f tests/TestExample/Dockerfile.alpine -t imageresizer-test-alpine .
+docker run -p 8080:8080 imageresizer-test-alpine
+```
+
+Cached folder will appear in /root/img-cache
 
 ## Performance
 

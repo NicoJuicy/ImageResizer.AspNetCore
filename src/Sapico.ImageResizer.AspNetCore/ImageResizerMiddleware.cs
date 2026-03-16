@@ -291,7 +291,7 @@ namespace Sapico.ImageResizer
             if (QueryContainsKeyIgnoreCase(query, "autorotate"))
                 bool.TryParse(QueryValueIgnoreCase(query, "autorotate"), out resizeParams.autorotate);
 
-            int quality = 100;
+            int quality = 80;
             if (QueryContainsKeyIgnoreCase(query, "quality"))
                 int.TryParse(QueryValueIgnoreCase(query, "quality"), out quality);
             resizeParams.quality = quality;
