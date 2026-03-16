@@ -3,7 +3,6 @@
     <TargetFrameworks>net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Version>10.0.3</Version>
     <Authors>Sapico</Authors>
     <Description>S3-based cache plugin for Sapico.ImageResizer. Stores processed images in an Amazon S3 bucket for persistent, distributed caching.</Description>
     <PackageId>Sapico.ImageResizer.Plugin.S3Cache</PackageId>
@@ -14,6 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE">

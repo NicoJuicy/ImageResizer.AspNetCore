@@ -1,4 +1,7 @@
 <Project>
+  <PropertyGroup>
+    <VersionPrefix>10.0.7</VersionPrefix>
+  </PropertyGroup>
   <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux')) Or $(RuntimeIdentifier.StartsWith('linux'))">
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
   </ItemGroup>
