@@ -246,7 +246,6 @@ docker build -f tests/TestExample/Dockerfile -t imageresizer-test .
 docker run -p 8080:8080 imageresizer-test
 ```
 
-
 #### Alpine
 
 ```bash

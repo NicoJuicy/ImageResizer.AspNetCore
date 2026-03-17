@@ -205,7 +205,6 @@ namespace Sapico.ImageResizer
                     resizedBitmap = Watermark.WatermarkImage(resizedBitmap, resizeParams, watermarkImage, imagePath);
             }
 
-
             // encode
             var resizedImage = SKImage.FromBitmap(resizedBitmap);
             var encodeFormat = resizeParams.format == "png" ? SKEncodedImageFormat.Png : SKEncodedImageFormat.Jpeg;
