@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 using SkiaSharp;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,6 +26,7 @@ namespace Sapico.ImageResizer
         private readonly ILogger<ImageResizerMiddleware> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly IImageCache _imageCache;
+        private readonly ImageResizerOptions _options;
         private WatermarkTextModel? watermarkText;
         private WatermarkImageModel? watermarkImage;
 
@@ -32,13 +36,13 @@ namespace Sapico.ImageResizer
             ".jpeg"
         };
 
-        public ImageResizerMiddleware(RequestDelegate req, IWebHostEnvironment env, ILogger<ImageResizerMiddleware> logger, IImageCache imageCache)
+        public ImageResizerMiddleware(RequestDelegate req, IWebHostEnvironment env, ILogger<ImageResizerMiddleware> logger, IImageCache imageCache, IOptions<ImageResizerOptions> options)
         {
             _req = req;
             _env = env;
             _logger = logger;
             _imageCache = imageCache;
-
+            _options = options.Value;
         }
         public async Task InvokeAsync(HttpContext context)
         {
@@ -113,7 +117,53 @@ namespace Sapico.ImageResizer
                 return;
             }
 
+            // build ETag from the same inputs used for the cache key
+            long cacheKey;
+            unchecked
+            {
+                cacheKey = imagePath.GetHashCode() + lastWriteTimeUtc.ToBinary() + resizeParams.ToString().GetHashCode();
+            }
+            var etag = $"\"{cacheKey:x}\""; // quoted hex string
+            var lastModified = new DateTimeOffset(lastWriteTimeUtc);
+
+            // handle conditional requests (304 Not Modified)
+            if (_options.EnableETag)
+            {
+                var ifNoneMatch = context.Request.Headers[HeaderNames.IfNoneMatch].ToString();
+                if (!string.IsNullOrEmpty(ifNoneMatch) && ifNoneMatch.Contains(etag))
+                {
+                    context.Response.StatusCode = StatusCodes.Status304NotModified;
+                    return;
+                }
+            }
+
+            if (_options.EnableLastModified)
+            {
+                var ifModifiedSince = context.Request.Headers[HeaderNames.IfModifiedSince].ToString();
+                if (!string.IsNullOrEmpty(ifModifiedSince)
+                    && DateTimeOffset.TryParseExact(ifModifiedSince, "R", CultureInfo.InvariantCulture, DateTimeStyles.None, out var since)
+                    && lastModified <= since)
+                {
+                    context.Response.StatusCode = StatusCodes.Status304NotModified;
+                    return;
+                }
+            }
+
             var imageData = GetImageData(imagePath, resizeParams, lastWriteTimeUtc);
+
+            // set cache headers
+            if (_options.CacheMaxAge > TimeSpan.Zero)
+            {
+                context.Response.Headers[HeaderNames.CacheControl] = $"public, max-age={(int)_options.CacheMaxAge.TotalSeconds}";
+            }
+            if (_options.EnableETag)
+            {
+                context.Response.Headers[HeaderNames.ETag] = etag;
+            }
+            if (_options.EnableLastModified)
+            {
+                context.Response.Headers[HeaderNames.LastModified] = lastModified.ToString("R");
+            }
 
             // write to stream
             context.Response.ContentType = resizeParams.format == "png" ? "image/png" : "image/jpeg";

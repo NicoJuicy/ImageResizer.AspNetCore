@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SkiaSharp;
@@ -9,8 +10,14 @@ namespace Sapico.ImageResizer.Helpers
     {
         public static IServiceCollection AddImageResizer(this IServiceCollection services)
         {
+            return services.AddImageResizer(_ => { });
+        }
+
+        public static IServiceCollection AddImageResizer(this IServiceCollection services, Action<ImageResizerOptions> configure)
+        {
             services.AddMemoryCache();
             services.TryAddSingleton<IImageCache, MemoryImageCache>();
+            services.Configure(configure);
             return services;
         }
 
