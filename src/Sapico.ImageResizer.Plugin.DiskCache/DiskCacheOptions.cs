@@ -5,7 +5,7 @@ namespace Sapico.ImageResizer.Plugin.DiskCache
 {
     public class DiskCacheOptions
     {
-        public string CacheFolder { get; set; } = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "img-cache");
+        public string CacheFolder { get; set; } = Path.Combine(Path.GetTempPath(), "img-cache"); // Default folder for docker containers
+            //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Te), "img-cache");
     }
 }
